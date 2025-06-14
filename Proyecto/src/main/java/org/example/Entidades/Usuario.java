@@ -1,4 +1,4 @@
-package org.example.Usuario;
+package org.example.Entidades;
 
 public class Usuario {
     private int id;
