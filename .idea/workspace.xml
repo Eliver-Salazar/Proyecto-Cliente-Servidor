@@ -4,7 +4,41 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a253b85-418f-48f3-a164-16b2a9f25474" name="Changes" comment="Initial commit" />
+    <list default="true" id="1a253b85-418f-48f3-a164-16b2a9f25474" name="Changes" comment="Initial commit">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/AutorDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/CategoriaDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/LibroDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/PrestamoDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/ReporteDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/ReservaDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/UsuarioDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Database/Conexion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Categoria.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Libro.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Prestamo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Reserva.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Servicios/AuthService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Servicios/PrestamoService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Servicios/ReservaService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Util/HashUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Util/Notificador.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/BibliotecarioView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/EstudianteView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/LoginView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/PrestamosPanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/RegistrarAutorPanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/RegistrarCategoriaPanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/RegistrarLibroPanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/RegistroView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/ReportesPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Proyecto/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Entidades/Autor.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Autor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Entidades/Usuario.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Usuario.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Main.java" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,14 +93,38 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Application.LoginView.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
     "last_opened_file_path": "E:/Cliente servidor",
-    "onboarding.tips.debug.path": "E:/Cliente servidor/Proyecto/src/main/java/org/example/Main.java"
+    "onboarding.tips.debug.path": "E:/Cliente servidor/Proyecto/src/main/java/org/example/Main.java",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="LoginView" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.example.View.LoginView" />
+      <module name="Proyecto" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.View.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.LoginView" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="1a253b85-418f-48f3-a164-16b2a9f25474" name="Changes" comment="" />
@@ -89,16 +147,5 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit" />
     <option name="LAST_COMMIT_MESSAGE" value="Initial commit" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Proyecto/src/main/java/org/example/Main.java</url>
-          <line>13</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
