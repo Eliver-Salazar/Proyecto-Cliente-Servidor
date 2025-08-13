@@ -38,28 +38,36 @@ public class BibliotecarioView extends JFrame {
         setJMenuBar(menuBar);
 
         // Panel de botones de menú lateral
-        JPanel menuPanel = new JPanel(new GridLayout(10, 1, 5, 5));
+        JPanel menuPanel = new JPanel(new GridLayout(12, 1, 5, 5));
+
+        JButton btnRegistrarAutor = new JButton("Registrar Autor");
+        JButton btnRegistrarCategoria = new JButton("Registrar Categoría");
         JButton btnRegistrarLibro = new JButton("Registrar Libro");
         JButton btnBuscarLibros = new JButton("Buscar Libros");
-        JButton btnCerrar = new JButton("Cerrar Sesión");
         JButton btnPrestamos = new JButton("Préstamos/Devoluciones");
-        menuPanel.add(btnPrestamos);
         JButton btnReportes = new JButton("Reportes");
-        menuPanel.add(btnReportes);
+        JButton btnCerrar = new JButton("Cerrar Sesión");
 
 
+        menuPanel.add(btnRegistrarAutor);
+        menuPanel.add(btnRegistrarCategoria);
         menuPanel.add(btnRegistrarLibro);
         menuPanel.add(btnBuscarLibros);
+        menuPanel.add(btnPrestamos);
+        menuPanel.add(btnReportes);
         menuPanel.add(btnCerrar);
 
         panelContenido = new JPanel(new BorderLayout());
         add(menuPanel, BorderLayout.WEST);
         add(panelContenido, BorderLayout.CENTER);
 
+        // ===== ACCIONES =====
+        btnRegistrarAutor.addActionListener(e -> mostrarPanel(new RegistrarAutorPanel()));            // <--
+        btnRegistrarCategoria.addActionListener(e -> mostrarPanel(new RegistrarCategoriaPanel()));    // <--
+        btnRegistrarLibro.addActionListener(e -> mostrarPanel(new RegistrarLibroPanel()));
+        btnBuscarLibros.addActionListener(e -> mostrarPanel(new org.example.View.EstudianteView.BuscarLibroPanel()));
         btnPrestamos.addActionListener(e -> mostrarPanel(new PrestamosPanel()));
         btnReportes.addActionListener(e -> mostrarPanel(new ReportesPanel()));
-        btnRegistrarLibro.addActionListener(e -> mostrarPanel(new RegistrarLibroPanel()));
-        btnBuscarLibros.addActionListener(e -> mostrarPanel(new BuscarLibroPanel()));
         btnCerrar.addActionListener(e -> {
             dispose();
             new LoginView().setVisible(true);

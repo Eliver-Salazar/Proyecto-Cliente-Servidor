@@ -30,8 +30,6 @@ public class EstudianteView extends JFrame {
         // Panel central con tabs
         JTabbedPane tabs = new JTabbedPane();
         tabs.addTab("Buscar libros", new BuscarLibroPanel());
-        tabs.addTab("Historial", new HistorialPanel());
-        tabs.addTab("Buscar libros", new BuscarLibroPanel());
         tabs.addTab("Reservar", new ReservaPanel(usuario.getId()));
         tabs.addTab("Historial", new HistorialPanel());
         add(tabs, BorderLayout.CENTER);
@@ -107,24 +105,28 @@ public class EstudianteView extends JFrame {
             Categoria categoriaSeleccionada = (Categoria) comboCategoria.getSelectedItem();
             String disponibilidad = (String) comboDisponibilidad.getSelectedItem();
 
+            Integer autorId = (autorSeleccionado != null) ? autorSeleccionado.getId() : 0;
+            Integer categoriaId = (categoriaSeleccionada != null) ? categoriaSeleccionada.getId() : 0;
+
             LibroDAO libroDAO = new LibroDAO();
-            List<Libro> resultados = libroDAO.buscarLibros(
+
+            var resultados = libroDAO.buscarLibrosVista(
                     titulo,
-                    (autorSeleccionado != null) ? autorSeleccionado.getId() : 0,
-                    (categoriaSeleccionada != null) ? categoriaSeleccionada.getId() : 0,
+                    autorId != null && autorId > 0 ? autorId : null,
+                    categoriaId != null && categoriaId > 0 ? categoriaId : null,
                     disponibilidad
             );
 
             DefaultTableModel modelo = (DefaultTableModel) tablaResultados.getModel();
             modelo.setRowCount(0);
-            for (Libro libro : resultados) {
+            for (var l : resultados) {
                 modelo.addRow(new Object[]{
-                        libro.getId(),
-                        libro.getTitulo(),
-                        libro.getAutorId(),
-                        libro.getCategoriaId(),
-                        libro.getIsbn(),
-                        libro.isDisponible() ? "Sí" : "No"
+                        l.id,
+                        l.titulo,
+                        l.autor,
+                        l.categoria,
+                        l.isbn,
+                        l.disponible ? "Sí" : "No"
                 });
             }
         }

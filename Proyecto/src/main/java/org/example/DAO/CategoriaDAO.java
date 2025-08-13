@@ -9,16 +9,37 @@ import java.util.List;
 
 public class CategoriaDAO {
 
-    public boolean registrarCategoria(Categoria c) {
-        String sql = "INSERT INTO Categoria(nombre) VALUES (?)";
+    public boolean existeNombre(String nombre) {
+        String sql = "SELECT 1 FROM Categoria WHERE LOWER(nombre) = LOWER(?) LIMIT 1";
         try (Connection conn = Conexion.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, c.getNombre());
-            return ps.executeUpdate() > 0;
+            ps.setString(1, nombre.trim());
+            try (ResultSet rs = ps.executeQuery()) { return rs.next(); }
         } catch (SQLException e) { e.printStackTrace(); return false; }
     }
 
-    /** Tu vista llama listarCategorias(): lo dejamos como alias */
+    public boolean registrarCategoria(Categoria c) {
+        String nombre = normalizar(c.getNombre());
+        if (existeNombre(nombre)) return false; // ya existe
+
+        String sql = "INSERT INTO Categoria(nombre) VALUES (?)";
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, nombre);
+            return ps.executeUpdate() > 0;
+        } catch (java.sql.SQLIntegrityConstraintViolationException dup) {
+            // respaldo si solo confías en la BD
+            return false;
+        } catch (SQLException e) { e.printStackTrace(); return false; }
+    }
+
+    private String normalizar(String s) {
+        if (s == null) return "";
+        // quita espacios extra y estandariza capitalización básica
+        String t = s.trim().replaceAll("\\s+", " ");
+        return t;
+    }
+
     public List<Categoria> listarCategorias() {
         return listar(); // alias
     }

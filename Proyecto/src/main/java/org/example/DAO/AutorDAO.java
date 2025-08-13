@@ -9,6 +9,21 @@ import java.util.List;
 
 public class AutorDAO {
 
+    public boolean existeAutor(String nombre) {
+        String sql = "SELECT COUNT(*) FROM Autor WHERE nombre = ?";
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, nombre);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // true si ya existe
+            }
+        } catch (SQLException e) {
+            System.err.println("Error verificando autor: " + e.getMessage());
+        }
+        return false;
+    }
+
     public boolean registrarAutor(Autor autor) {
         String sql = "INSERT INTO Autor(nombre) VALUES (?)";
         try (Connection conn = Conexion.getConexion();
@@ -21,12 +36,10 @@ public class AutorDAO {
         }
     }
 
-    /** Tu vista llama listarAutores(): lo dejamos como alias */
     public List<Autor> listarAutores() {
         return listar(); // alias
     }
 
-    /** Implementación base */
     public List<Autor> listar() {
         List<Autor> out = new ArrayList<>();
         String sql = "SELECT id_autor, nombre FROM Autor ORDER BY nombre";

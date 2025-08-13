@@ -10,10 +10,10 @@ import java.util.List;
 
 public class PrestamoDAO {
 
-    /** Ya lo teníamos con otro nombre; lo dejamos igual y agregamos alias */
+
     public boolean existePrestamoActivo(int libroId) { return estaPrestadoActivo(libroId); }
 
-    /** Compatibilidad con EstudianteView: */
+
     public boolean estaPrestadoActivo(int libroId) {
         String sql = "SELECT 1 FROM Prestamo WHERE libro_id=? AND fecha_devolucion IS NULL";
         try (Connection conn = Conexion.getConexion();
@@ -109,4 +109,16 @@ public class PrestamoDAO {
         p.setMulta(rs.getBigDecimal("multa"));
         return p;
     }
+
+    public List<Prestamo> vencenManiana() {
+        List<Prestamo> out = new ArrayList<>();
+        String sql = "SELECT * FROM Prestamo WHERE fecha_devolucion IS NULL AND fecha_vencimiento = CURDATE() + INTERVAL 1 DAY";
+        try (Connection c = Conexion.getConexion();
+             PreparedStatement ps = c.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) out.add(map(rs));
+        } catch (SQLException e) { e.printStackTrace(); }
+        return out;
+    }
+
 }

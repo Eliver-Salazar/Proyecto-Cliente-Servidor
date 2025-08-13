@@ -9,6 +9,22 @@ import java.util.List;
 
 public class LibroDAO {
 
+    // ===== DTO liviano para la UI (con nombres) =====
+    public static class LibroVista {
+        public final int id;
+        public final String titulo;
+        public final String autor;      // nombre de autor
+        public final String categoria;  // nombre de categoría
+        public final String isbn;
+        public final boolean disponible;
+
+        public LibroVista(int id, String titulo, String autor, String categoria, String isbn, boolean disponible) {
+            this.id = id; this.titulo = titulo; this.autor = autor; this.categoria = categoria; this.isbn = isbn; this.disponible = disponible;
+        }
+    }
+
+    // ======== LO QUE YA TENÍAS ========
+
     public boolean registrarLibro(Libro libro) {
         String sql = "INSERT INTO Libro (titulo, autor_id, categoria_id, isbn, disponible) VALUES (?,?,?,?,?)";
         try (Connection conn = Conexion.getConexion();
@@ -22,7 +38,6 @@ public class LibroDAO {
         } catch (SQLException e) { e.printStackTrace(); return false; }
     }
 
-    /** Compatibilidad con tu vista: disponibilidad viene como String */
     public List<Libro> buscarLibros(String titulo, int autorId, int categoriaId, String disponibilidad) {
         Boolean disp = null;
         if ("Disponible".equalsIgnoreCase(disponibilidad)) disp = true;
@@ -55,7 +70,6 @@ public class LibroDAO {
         return out;
     }
 
-    /** Usado por EstudianteView.ReservaPanel */
     public List<Libro> listarLibrosDisponibles() {
         List<Libro> out = new ArrayList<>();
         String sql = "SELECT id_libro, titulo, autor_id, categoria_id, isbn, disponible FROM Libro WHERE disponible=1 ORDER BY titulo";
@@ -91,7 +105,6 @@ public class LibroDAO {
         return false;
     }
 
-    /** Compatibilidad con tu ReportesPanel: devuelve List<Object[]> (ID, Título, Total) */
     public List<Object[]> obtenerReportePrestamos() {
         List<Object[]> out = new ArrayList<>();
         String sql = """
@@ -118,5 +131,76 @@ public class LibroDAO {
                 rs.getString("isbn"),
                 rs.getBoolean("disponible")
         );
+    }
+
+    // ======== NUEVO: métodos “para vista” con JOIN (nombres de autor/categoría) ========
+
+    /** Búsqueda con JOIN para mostrar nombres en la tabla de resultados */
+    public List<LibroVista> buscarLibrosVista(String titulo, Integer autorId, Integer categoriaId, String disponibilidad) {
+        List<LibroVista> out = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT l.id_libro, l.titulo, a.nombre AS autor, c.nombre AS categoria, l.isbn, l.disponible " +
+                        "FROM Libro l " +
+                        "JOIN Autor a ON a.id_autor = l.autor_id " +
+                        "JOIN Categoria c ON c.id_categoria = l.categoria_id " +
+                        "WHERE 1=1 "
+        );
+
+        if (titulo != null && !titulo.isEmpty()) sql.append("AND l.titulo LIKE ? ");
+        if (autorId != null && autorId > 0)      sql.append("AND l.autor_id = ? ");
+        if (categoriaId != null && categoriaId > 0) sql.append("AND l.categoria_id = ? ");
+        if (disponibilidad != null && !"Todos".equalsIgnoreCase(disponibilidad)) sql.append("AND l.disponible = ? ");
+        sql.append("ORDER BY l.titulo");
+
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            int i = 1;
+            if (titulo != null && !titulo.isEmpty()) ps.setString(i++, "%" + titulo + "%");
+            if (autorId != null && autorId > 0) ps.setInt(i++, autorId);
+            if (categoriaId != null && categoriaId > 0) ps.setInt(i++, categoriaId);
+            if (disponibilidad != null && !"Todos".equalsIgnoreCase(disponibilidad)) {
+                ps.setBoolean(i++, "Disponible".equalsIgnoreCase(disponibilidad));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    out.add(new LibroVista(
+                            rs.getInt("id_libro"),
+                            rs.getString("titulo"),
+                            rs.getString("autor"),
+                            rs.getString("categoria"),
+                            rs.getString("isbn"),
+                            rs.getBoolean("disponible")
+                    ));
+                }
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return out;
+    }
+
+    /** Solo libros disponibles con nombres (útil para pestaña de Reservas si quieres mostrar autor/categoría) */
+    public List<LibroVista> listarDisponiblesVista() {
+        List<LibroVista> out = new ArrayList<>();
+        String sql = "SELECT l.id_libro, l.titulo, a.nombre AS autor, c.nombre AS categoria, l.isbn, l.disponible " +
+                "FROM Libro l " +
+                "JOIN Autor a ON a.id_autor = l.autor_id " +
+                "JOIN Categoria c ON c.id_categoria = l.categoria_id " +
+                "WHERE l.disponible = 1 " +
+                "ORDER BY l.titulo";
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                out.add(new LibroVista(
+                        rs.getInt("id_libro"),
+                        rs.getString("titulo"),
+                        rs.getString("autor"),
+                        rs.getString("categoria"),
+                        rs.getString("isbn"),
+                        rs.getBoolean("disponible")
+                ));
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return out;
     }
 }
