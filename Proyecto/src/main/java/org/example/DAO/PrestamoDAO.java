@@ -4,16 +4,18 @@ import org.example.Database.Conexion;
 import org.example.Modelo.Entidades.Prestamo;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO de Préstamo: consulta de estado, inserción, cierre y listados.
+ */
 public class PrestamoDAO {
 
-
+    /** Alias de compatibilidad (ambos nombres se usan en UI/servicios). */
     public boolean existePrestamoActivo(int libroId) { return estaPrestadoActivo(libroId); }
 
-
+    /** Devuelve true si hay un préstamo activo (sin devolución) para ese libro. */
     public boolean estaPrestadoActivo(int libroId) {
         String sql = "SELECT 1 FROM Prestamo WHERE libro_id=? AND fecha_devolucion IS NULL";
         try (Connection conn = Conexion.getConexion();
@@ -23,7 +25,7 @@ public class PrestamoDAO {
         } catch (SQLException e) { e.printStackTrace(); return false; }
     }
 
-    /** Devuelve la fecha de vencimiento del préstamo activo (o cadena vacía) */
+    /** Fecha de vencimiento del préstamo activo (o "" si no hay). */
     public String obtenerFechaDevolucionActiva(int libroId) {
         String sql = "SELECT fecha_vencimiento FROM Prestamo WHERE libro_id=? AND fecha_devolucion IS NULL ORDER BY id_prestamo DESC LIMIT 1";
         try (Connection conn = Conexion.getConexion();
@@ -39,6 +41,7 @@ public class PrestamoDAO {
         return "";
     }
 
+    /** Inserta un préstamo y devuelve el ID generado. */
     public int insertar(Prestamo p) {
         String sql = "INSERT INTO Prestamo(usuario_id, libro_id, fecha_inicio, fecha_vencimiento) VALUES (?,?,?,?)";
         try (Connection conn = Conexion.getConexion();
@@ -53,6 +56,7 @@ public class PrestamoDAO {
         return 0;
     }
 
+    /** Busca un préstamo por ID. */
     public Prestamo findById(int id) {
         String sql = "SELECT * FROM Prestamo WHERE id_prestamo=?";
         try (Connection conn = Conexion.getConexion();
@@ -63,6 +67,7 @@ public class PrestamoDAO {
         return null;
     }
 
+    /** Cierra un préstamo (setea fecha_devolucion y multa). */
     public boolean cerrar(Prestamo p) {
         String sql = "UPDATE Prestamo SET fecha_devolucion=?, multa=? WHERE id_prestamo=?";
         try (Connection conn = Conexion.getConexion();
@@ -74,6 +79,7 @@ public class PrestamoDAO {
         } catch (SQLException e) { e.printStackTrace(); return false; }
     }
 
+    /** Historial por usuario (más recientes primero). */
     public List<Prestamo> historialPorUsuario(int usuarioId) {
         List<Prestamo> out = new ArrayList<>();
         String sql = "SELECT * FROM Prestamo WHERE usuario_id=? ORDER BY fecha_inicio DESC";
@@ -85,6 +91,7 @@ public class PrestamoDAO {
         return out;
     }
 
+    /** Préstamos activos (sin devolución). */
     public List<Prestamo> listarActivos() {
         List<Prestamo> out = new ArrayList<>();
         String sql = "SELECT * FROM Prestamo WHERE fecha_devolucion IS NULL ORDER BY fecha_inicio DESC";
@@ -96,6 +103,7 @@ public class PrestamoDAO {
         return out;
     }
 
+    /** Mapeo ResultSet -> Prestamo. */
     private Prestamo map(ResultSet rs) throws SQLException {
         Prestamo p = new Prestamo(
                 rs.getInt("id_prestamo"),
@@ -110,6 +118,7 @@ public class PrestamoDAO {
         return p;
     }
 
+    /** Útil para cron/recordatorios (no usada aún en UI). */
     public List<Prestamo> vencenManiana() {
         List<Prestamo> out = new ArrayList<>();
         String sql = "SELECT * FROM Prestamo WHERE fecha_devolucion IS NULL AND fecha_vencimiento = CURDATE() + INTERVAL 1 DAY";
@@ -120,5 +129,4 @@ public class PrestamoDAO {
         } catch (SQLException e) { e.printStackTrace(); }
         return out;
     }
-
 }

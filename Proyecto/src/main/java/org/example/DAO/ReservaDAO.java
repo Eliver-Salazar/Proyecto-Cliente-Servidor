@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public class ReservaDAO {
 
-    /** Tu vista llama registrarReserva(Reserva): lo implementamos aquí */
+
     public boolean registrarReserva(Reserva r) {
         String sql = "INSERT INTO Reserva(usuario_id, libro_id, fecha_reserva, estado) VALUES (?,?,?,?)";
         try (Connection conn = Conexion.getConexion();
@@ -32,7 +32,7 @@ public class ReservaDAO {
         } catch (Exception e) { e.printStackTrace(); return false; }
     }
 
-    // Métodos de servicio que ya te dejé antes (por si los usas en otras partes)
+
     public int insertInmediata(int usuarioId, int libroId) {
         String sql = "INSERT INTO Reserva(usuario_id, libro_id, fecha_reserva, estado) VALUES (?,?,?,?)";
         try (Connection conn = Conexion.getConexion();
@@ -78,7 +78,6 @@ public class ReservaDAO {
 
     // Marca como notificado al usuario de esa reserva
     public boolean marcarNotificado(int reservaId) {
-        // si NO tienes columna fecha_notificacion, elimina esa parte
         String sql = "UPDATE Reserva SET estado='NOTIFICADO' WHERE id_reserva=?";
         try (Connection conn = Conexion.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -88,7 +87,6 @@ public class ReservaDAO {
         return false;
     }
 
-    // --- ayudante para mapear ResultSet -> Reserva (ajusta al constructor que tengas)
     private Reserva mapReserva(ResultSet rs) throws SQLException {
         return new Reserva(
                 rs.getInt("id_reserva"),

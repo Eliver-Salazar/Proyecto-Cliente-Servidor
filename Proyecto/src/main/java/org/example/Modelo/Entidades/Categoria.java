@@ -1,5 +1,9 @@
 package org.example.Modelo.Entidades;
 
+/**
+ * POJO Categoria: id + nombre.
+ * toString() devuelve el nombre (útil para combos).
+ */
 public class Categoria {
     private int id;
     private String nombre;

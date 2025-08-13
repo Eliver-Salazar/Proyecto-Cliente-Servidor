@@ -7,43 +7,41 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO de Categoría: evita duplicados, inserta y lista categorías.
+ */
 public class CategoriaDAO {
 
+    /** Normaliza el nombre para comparar: trim y lower-case */
+    private String norm(String s) { return (s == null) ? "" : s.trim().replaceAll("\\s+"," ").toLowerCase(); }
+
+    /** Devuelve true si ya existe una categoría con el mismo nombre (insensible a mayúsculas/minúsculas). */
     public boolean existeNombre(String nombre) {
-        String sql = "SELECT 1 FROM Categoria WHERE LOWER(nombre) = LOWER(?) LIMIT 1";
+        String sql = "SELECT 1 FROM Categoria WHERE LOWER(TRIM(nombre)) = ? LIMIT 1";
         try (Connection conn = Conexion.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, nombre.trim());
+            ps.setString(1, norm(nombre));
             try (ResultSet rs = ps.executeQuery()) { return rs.next(); }
         } catch (SQLException e) { e.printStackTrace(); return false; }
     }
 
+    /** Inserta una categoría si no existe (devuelve true si se insertó). */
     public boolean registrarCategoria(Categoria c) {
-        String nombre = normalizar(c.getNombre());
-        if (existeNombre(nombre)) return false; // ya existe
+        String nombre = c.getNombre();
+        if (existeNombre(nombre)) return false;
 
         String sql = "INSERT INTO Categoria(nombre) VALUES (?)";
         try (Connection conn = Conexion.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, nombre);
+            ps.setString(1, nombre.trim().replaceAll("\\s+"," "));
             return ps.executeUpdate() > 0;
-        } catch (java.sql.SQLIntegrityConstraintViolationException dup) {
-            // respaldo si solo confías en la BD
-            return false;
         } catch (SQLException e) { e.printStackTrace(); return false; }
     }
 
-    private String normalizar(String s) {
-        if (s == null) return "";
-        // quita espacios extra y estandariza capitalización básica
-        String t = s.trim().replaceAll("\\s+", " ");
-        return t;
-    }
+    /** Alias de compatibilidad con vistas */
+    public List<Categoria> listarCategorias() { return listar(); }
 
-    public List<Categoria> listarCategorias() {
-        return listar(); // alias
-    }
-
+    /** Lista categorías ordenadas por nombre. */
     public List<Categoria> listar() {
         List<Categoria> out = new ArrayList<>();
         String sql = "SELECT id_categoria, nombre FROM Categoria ORDER BY nombre";

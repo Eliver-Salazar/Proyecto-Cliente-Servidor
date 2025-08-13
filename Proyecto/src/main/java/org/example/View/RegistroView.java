@@ -7,7 +7,11 @@ import org.example.Modelo.Util.HashUtil;
 import javax.swing.*;
 import java.awt.*;
 
-
+/**
+ * Diálogo de registro de usuario:
+ * - Hashea la contraseña y persiste.
+ * - Permite elegir rol (Estudiante/Bibliotecario).
+ */
 class RegistroView extends JFrame {
     private JTextField txtNombre, txtCorreo;
     private JPasswordField txtPassword;
@@ -32,6 +36,7 @@ class RegistroView extends JFrame {
         btnRegistrar.addActionListener(e -> registrarUsuario());
     }
 
+    /** Valida campos, hashea password y registra. */
     private void registrarUsuario() {
         String nombre = txtNombre.getText();
         String correo = txtCorreo.getText();

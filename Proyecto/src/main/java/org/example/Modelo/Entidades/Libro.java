@@ -1,5 +1,10 @@
 package org.example.Modelo.Entidades;
 
+/**
+ * POJO Libro:
+ * - Claves foráneas a Autor/Categoria vía autorId/categoriaId
+ * - Disponible indica si se puede prestar/reservar inmediato.
+ */
 public class Libro {
     private int id;
     private String titulo;

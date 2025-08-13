@@ -7,6 +7,11 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDate;
 
+/**
+ * Panel de reportes:
+ * - Más prestados y Menos usados, en un rango elegido.
+ * - Consulta ReporteDAO.
+ */
 public class ReportesPanel extends JPanel {
     private JTable tabla;
     private DefaultTableModel modelo;
@@ -16,6 +21,7 @@ public class ReportesPanel extends JPanel {
     public ReportesPanel() {
         setLayout(new BorderLayout(8,8));
 
+        // Filtros de rango y límite
         JPanel top = new JPanel();
         comboRango = new JComboBox<>(new String[]{"30 días","90 días","180 días","365 días"});
         spLimite = new JSpinner(new SpinnerNumberModel(10, 1, 100, 1));
@@ -26,14 +32,17 @@ public class ReportesPanel extends JPanel {
         top.add(btnMas); top.add(btnMenos);
         add(top, BorderLayout.NORTH);
 
+        // Tabla
         modelo = new DefaultTableModel(new Object[]{"ID Libro","Título","Conteo"}, 0);
         tabla = new JTable(modelo);
         add(new JScrollPane(tabla), BorderLayout.CENTER);
 
+        // Acciones
         btnMas.addActionListener(e -> cargar(true));
         btnMenos.addActionListener(e -> cargar(false));
     }
 
+    /** Ejecuta el reporte seleccionado y llena la tabla. */
     private void cargar(boolean mas) {
         modelo.setRowCount(0);
         int dias = switch ((String) comboRango.getSelectedItem()) {
@@ -55,4 +64,3 @@ public class ReportesPanel extends JPanel {
         }
     }
 }
-

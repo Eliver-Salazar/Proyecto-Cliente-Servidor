@@ -1,15 +1,14 @@
 package org.example.View;
 
 import org.example.DAO.PrestamoDAO;
-import org.example.DAO.LibroDAO;
 import org.example.Modelo.Entidades.Prestamo;
 import org.example.Modelo.Servicios.PrestamoService;
+import org.example.Modelo.Servicios.RecordatorioService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 public class PrestamosPanel extends JPanel {
@@ -43,12 +42,15 @@ public class PrestamosPanel extends JPanel {
 
         JPanel abajo = new JPanel();
         JButton btnDevolver = new JButton("Registrar devolución");
+        JButton btnRecordatorios = new JButton("Enviar recordatorios (vencen mañana)"); // <-- NUEVO
         abajo.add(btnDevolver);
+        abajo.add(btnRecordatorios); // <-- NUEVO
         add(abajo, BorderLayout.SOUTH);
 
         btnPrestar.addActionListener(e -> prestar());
         btnRefrescar.addActionListener(e -> cargarActivos());
         btnDevolver.addActionListener(e -> devolverSeleccionado());
+        btnRecordatorios.addActionListener(e -> enviarRecordatorios()); // <-- NUEVO
 
         cargarActivos();
     }
@@ -99,5 +101,9 @@ public class PrestamosPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-}
 
+    private void enviarRecordatorios() {
+        int n = new RecordatorioService().enviarRecordatoriosVencimiento();
+        JOptionPane.showMessageDialog(this, "Correos enviados: " + n);
+    }
+}

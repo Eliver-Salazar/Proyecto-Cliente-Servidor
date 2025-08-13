@@ -1,5 +1,9 @@
 package org.example.Modelo.Entidades;
 
+/**
+ * POJO Autor: id + nombre.
+ * toString() devuelve el nombre (útil para mostrar en JComboBox).
+ */
 public class Autor {
     private int id;
     private String nombre;

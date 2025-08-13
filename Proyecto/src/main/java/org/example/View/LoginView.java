@@ -6,6 +6,12 @@ import org.example.Modelo.Servicios.AuthService;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Pantalla de Login:
+ * - Permite autenticación.
+ * - Redirige a EstudianteView o BibliotecarioView según el rol.
+ * - Abre RegistroView para alta de usuarios.
+ */
 public class LoginView extends JFrame {
     private JTextField txtCorreo;
     private JPasswordField txtPassword;
@@ -36,6 +42,7 @@ public class LoginView extends JFrame {
         btnRegistro.addActionListener(e -> new RegistroView().setVisible(true));
     }
 
+    /** Autentica y enruta a la vista correspondiente según rol. */
     private void autenticar() {
         String correo = txtCorreo.getText().trim();
         String pass = new String(txtPassword.getPassword());
@@ -54,6 +61,7 @@ public class LoginView extends JFrame {
         }
     }
 
+    /** Punto de entrada: abre el login. */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new LoginView().setVisible(true));
     }

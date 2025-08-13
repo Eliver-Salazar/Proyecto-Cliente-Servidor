@@ -1,5 +1,10 @@
 package org.example.Modelo.Entidades;
 
+/**
+ * POJO Usuario:
+ * - rol esperado: ESTUDIANTE | BIBLIOTECARIO (UI usa texto, no enum).
+ * - contraseña: almacenar hash (recomendado).
+ */
 public class Usuario {
     private int id;
     private String nombre;

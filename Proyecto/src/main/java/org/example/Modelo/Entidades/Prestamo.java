@@ -3,6 +3,11 @@ package org.example.Modelo.Entidades;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * POJO Prestamo:
+ * - Registra inicio, vencimiento y eventualmente devolución y multa.
+ * - Si fechaDevolucion es null => préstamo activo.
+ */
 public class Prestamo {
     private int id;
     private int usuarioId;

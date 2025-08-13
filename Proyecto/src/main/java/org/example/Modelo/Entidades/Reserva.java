@@ -3,6 +3,11 @@ package org.example.Modelo.Entidades;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * POJO Reserva:
+ * - Estados previstos: PENDIENTE, NOTIFICADO, CUMPLIDA.
+ * - fechaReserva: cuándo se solicitó/creó.
+ */
 public class Reserva {
     private int id;
     private int usuarioId;
@@ -10,14 +15,14 @@ public class Reserva {
     private LocalDateTime fechaReserva;
     private String estado; // PENDIENTE, NOTIFICADO, CUMPLIDA
 
-    public Reserva() {}
-
     public Reserva(int id, int usuarioId, int libroId, LocalDateTime fechaReserva, String estado) {
         this.id = id; this.usuarioId = usuarioId; this.libroId = libroId;
         this.fechaReserva = fechaReserva; this.estado = estado;
     }
-
-    /** Constructor que TU vista usa: (id, libroId, usuarioId, LocalDate) */
+    /**
+     * Constructor de conveniencia usado por la UI:
+     * (id, libroId, usuarioId, LocalDate) => asume estado PENDIENTE y hora 00:00.
+     */
     public Reserva(int id, int libroId, int usuarioId, LocalDate fecha) {
         this.id = id;
         this.usuarioId = usuarioId;
