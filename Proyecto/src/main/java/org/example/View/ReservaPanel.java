@@ -61,49 +61,17 @@ public class ReservaPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Seleccione un libro para reservar.");
             return;
         }
-
         int libroId = (int) tablaLibros.getValueAt(fila, 0);
-
         try {
-            PrestamoDAO prestamoDAO = new PrestamoDAO();
-            ReservaDAO reservaDAO = new ReservaDAO();
-
-            // ¿Está prestado ahora mismo?
-            if (prestamoDAO.estaPrestadoActivo(libroId)) {
-                String fecha = prestamoDAO.obtenerFechaDevolucionActiva(libroId);
-                int r = JOptionPane.showConfirmDialog(
-                        this,
-                        "El libro está prestado (vuelve aprox. " + fecha + ").\n¿Desea reservarlo en cola y ser notificado cuando esté disponible?",
-                        "Libro prestado",
-                        JOptionPane.YES_NO_OPTION
-                );
-                if (r == JOptionPane.YES_OPTION) {
-                    int idReserva = reservaDAO.insertEnCola(usuarioId, libroId);
-                    if (idReserva > 0) {
-                        JOptionPane.showMessageDialog(this, "Reserva en cola creada. Serás notificado al quedar disponible.");
-                    } else {
-                        JOptionPane.showMessageDialog(this, "No se pudo crear la reserva en cola.", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-                return;
-            }
-
-            // ¿Ya existe una reserva activa?
-            if (reservaDAO.libroReservado(libroId)) {
-                JOptionPane.showMessageDialog(this, "Este libro ya está reservado (registro activo).");
-                return;
-            }
-
-            // Libro no prestado y sin reserva activa: usar ReservaService para coherencia (marca no disponible si aplica)
-            boolean inmediata = new ReservaService().crearReserva(usuarioId, libroId);
+            // Reemplazar toda la lógica manual por el service:
+            var service = new org.example.Modelo.Servicios.ReservaService();
+            boolean inmediata = service.crearReserva(usuarioId, libroId);
             if (inmediata) {
-                JOptionPane.showMessageDialog(this, "Reserva inmediata creada. El libro quedó apartado para ti (no disponible para otros).");
+                JOptionPane.showMessageDialog(this, "Reserva registrada y apartada. Revisa tu correo.");
             } else {
-                // Por si en algún escenario la reserva cae en cola (no debería con disponibles)
-                JOptionPane.showMessageDialog(this, "Quedaste en cola. Te avisaremos cuando esté disponible.");
+                JOptionPane.showMessageDialog(this, "Reserva en cola registrada. Te avisaremos cuando esté disponible.");
             }
-            cargarLibrosDisponibles(); // refrescar
-
+            cargarLibrosDisponibles();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Ocurrió un error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();

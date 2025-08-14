@@ -5,46 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a253b85-418f-48f3-a164-16b2a9f25474" name="Changes" comment="Initial commit">
-      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Servicios/RecordatorioService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/BuscarLibroPanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/ReservaPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/AutorDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/AutorDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/CategoriaDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/CategoriaDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/LibroDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/LibroDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/PrestamoDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/PrestamoDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/ReservaDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/ReservaDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/UsuarioDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/DAO/UsuarioDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Database/Conexion.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Database/Conexion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Autor.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Autor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Categoria.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Categoria.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Libro.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Libro.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Prestamo.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Prestamo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Reserva.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Reserva.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Usuario.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Entidades/Usuario.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Servicios/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Servicios/AuthService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Servicios/PrestamoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Servicios/PrestamoService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Servicios/ReservaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Servicios/ReservaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Util/HashUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Util/HashUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Util/Notificador.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/Modelo/Util/Notificador.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/BibliotecarioView.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/BibliotecarioView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/EstudianteView.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/EstudianteView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/LoginView.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/LoginView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/PrestamosPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/PrestamosPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/RegistroView.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/RegistroView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/ReportesPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/ReportesPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/target/classes/org/example/DAO/AutorDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/target/classes/org/example/DAO/AutorDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/target/classes/org/example/DAO/CategoriaDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/target/classes/org/example/DAO/CategoriaDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/target/classes/org/example/DAO/LibroDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/target/classes/org/example/DAO/LibroDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/target/classes/org/example/DAO/PrestamoDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/target/classes/org/example/DAO/PrestamoDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/ReservaPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/src/main/java/org/example/View/ReservaPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Proyecto/target/classes/org/example/DAO/ReservaDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/target/classes/org/example/DAO/ReservaDAO.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Proyecto/target/classes/org/example/Modelo/Servicios/PrestamoService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/target/classes/org/example/Modelo/Servicios/PrestamoService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/target/classes/org/example/View/BibliotecarioView$GestionPrestamosPanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/target/classes/org/example/View/BibliotecarioView.class" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/target/classes/org/example/View/BibliotecarioView.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/target/classes/org/example/View/EstudianteView$BuscarLibroPanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/target/classes/org/example/View/EstudianteView$HistorialPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/target/classes/org/example/View/EstudianteView$HistorialPanel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/target/classes/org/example/View/EstudianteView$ReservaPanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Proyecto/target/classes/org/example/View/EstudianteView.class" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/target/classes/org/example/View/EstudianteView.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Proyecto/target/classes/org/example/Modelo/Servicios/ReservaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/target/classes/org/example/Modelo/Servicios/ReservaService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Proyecto/target/classes/org/example/View/PrestamosPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/target/classes/org/example/View/PrestamosPanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Proyecto/target/classes/org/example/View/ReservaPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/Proyecto/target/classes/org/example/View/ReservaPanel.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -172,7 +144,31 @@
       <option name="project" value="LOCAL" />
       <updated>1755053284057</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1755126205771</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1755126205771</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1755126218427</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1755126218427</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1755126276842</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1755126276842</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

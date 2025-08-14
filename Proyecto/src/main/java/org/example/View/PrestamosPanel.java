@@ -3,7 +3,6 @@ package org.example.View;
 import org.example.DAO.PrestamoDAO;
 import org.example.Modelo.Entidades.Prestamo;
 import org.example.Modelo.Servicios.PrestamoService;
-import org.example.Modelo.Servicios.RecordatorioService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -22,7 +21,7 @@ public class PrestamosPanel extends JPanel {
     public PrestamosPanel() {
         setLayout(new BorderLayout(8,8));
 
-        JPanel arriba = new JPanel(new GridLayout(2,6,6,6));
+        JPanel arriba = new JPanel(new GridLayout(2,7,6,6));
         arriba.add(new JLabel("Usuario ID:"));
         txtUsuarioId = new JTextField(); arriba.add(txtUsuarioId);
         arriba.add(new JLabel("Libro ID:"));
@@ -31,8 +30,11 @@ public class PrestamosPanel extends JPanel {
         txtDias = new JTextField("14"); arriba.add(txtDias);
 
         JButton btnPrestar = new JButton("Prestar");
+        JButton btnPrestarReserva = new JButton("Prestar (reserva)"); // nuevo
         JButton btnRefrescar = new JButton("Refrescar");
-        arriba.add(new JLabel()); arriba.add(btnPrestar); arriba.add(btnRefrescar);
+        arriba.add(btnPrestar);
+        arriba.add(btnPrestarReserva);
+        arriba.add(btnRefrescar);
 
         add(arriba, BorderLayout.NORTH);
 
@@ -42,15 +44,13 @@ public class PrestamosPanel extends JPanel {
 
         JPanel abajo = new JPanel();
         JButton btnDevolver = new JButton("Registrar devolución");
-        JButton btnRecordatorios = new JButton("Enviar recordatorios (vencen mañana)"); // <-- NUEVO
         abajo.add(btnDevolver);
-        abajo.add(btnRecordatorios); // <-- NUEVO
         add(abajo, BorderLayout.SOUTH);
 
-        btnPrestar.addActionListener(e -> prestar());
+        btnPrestar.addActionListener(e -> prestar(false));
+        btnPrestarReserva.addActionListener(e -> prestar(true));
         btnRefrescar.addActionListener(e -> cargarActivos());
         btnDevolver.addActionListener(e -> devolverSeleccionado());
-        btnRecordatorios.addActionListener(e -> enviarRecordatorios()); // <-- NUEVO
 
         cargarActivos();
     }
@@ -66,18 +66,18 @@ public class PrestamosPanel extends JPanel {
         }
     }
 
-    private void prestar() {
+    private void prestar(boolean desdeReserva) {
         try {
             int usuarioId = Integer.parseInt(txtUsuarioId.getText().trim());
             int libroId = Integer.parseInt(txtLibroId.getText().trim());
             int dias = Integer.parseInt(txtDias.getText().trim());
+
+            // Desde UI no cambia nada especial, el service ya respeta reserva NOTIFICADO.
             int id = service.prestar(usuarioId, libroId, dias);
-            if (id > 0) {
-                JOptionPane.showMessageDialog(this, "Préstamo registrado. ID=" + id);
-                cargarActivos();
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo registrar el préstamo", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+
+            JOptionPane.showMessageDialog(this, "Préstamo registrado. ID=" + id);
+            cargarActivos();
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -102,8 +102,8 @@ public class PrestamosPanel extends JPanel {
         }
     }
 
-    private void enviarRecordatorios() {
-        int n = new RecordatorioService().enviarRecordatoriosVencimiento();
-        JOptionPane.showMessageDialog(this, "Correos enviados: " + n);
-    }
 }
+
+
+
+
