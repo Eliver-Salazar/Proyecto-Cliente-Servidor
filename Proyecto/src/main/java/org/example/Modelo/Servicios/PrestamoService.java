@@ -3,13 +3,17 @@ package org.example.Modelo.Servicios;
 import org.example.DAO.LibroDAO;
 import org.example.DAO.PrestamoDAO;
 import org.example.DAO.ReservaDAO;
+import org.example.DAO.UsuarioDAO;
 import org.example.Modelo.Entidades.Libro;
 import org.example.Modelo.Entidades.Prestamo;
 import org.example.Modelo.Entidades.Reserva;
+import org.example.Modelo.Entidades.Usuario;
+import org.example.Modelo.Util.Notificador;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 
 public class PrestamoService {
@@ -17,8 +21,6 @@ public class PrestamoService {
     private final LibroDAO libroDAO = new LibroDAO();
     private final ReservaDAO reservaDAO = new ReservaDAO();
     private final ReservaService reservaService = new ReservaService();
-
-    public int prestar(int usuarioId, int libroId) { return prestar(usuarioId, libroId, 14); }
 
     /**
      * Presta un libro cumpliendo reglas:
@@ -95,5 +97,46 @@ public class PrestamoService {
         long diasAtraso = ChronoUnit.DAYS.between(vto, devol);
         if (diasAtraso <= 0) return BigDecimal.ZERO;
         return new BigDecimal("200").multiply(BigDecimal.valueOf(diasAtraso)); // ₡200 por día
+    }
+
+    /**
+     * Lista los préstamos que vencen mañana
+     */
+    public List<Prestamo> listarVencenManiana() {
+        return prestamoDAO.vencenManiana();
+    }
+
+    /**
+     * Envia avisos por correo (simulado) a todos los usuarios con préstamos que vencen mañana.
+     * Retorna cuántos correos/envíos se intentaron.
+     */
+    public int enviarAvisosVencimiento() {
+        List<Prestamo> lista = prestamoDAO.vencenManiana();
+        if (lista == null || lista.isEmpty()) return 0;
+
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        Notificador notificador = new Notificador();
+
+        int enviados = 0;
+        for (Prestamo p : lista) {
+            Usuario u = usuarioDAO.findById(p.getUsuarioId());
+            Libro l = libroDAO.findById(p.getLibroId());
+
+            String correo = (u != null && u.getCorreo() != null && !u.getCorreo().isEmpty())
+                    ? u.getCorreo()
+                    : ("usuario-" + p.getUsuarioId() + "@example.com");
+
+            String nombre = (u != null ? u.getNombre() : null);
+            String tituloLibro = (l != null ? l.getTitulo() : ("ID " + p.getLibroId()));
+
+            String asunto = "Recordatorio: tu préstamo vence mañana";
+            String mensaje = "Este es un recordatorio de que tu préstamo del libro \"" + tituloLibro + "\" " +
+                    "vence el " + p.getFechaVencimiento() + ". Por favor realiza la devolución a tiempo para evitar multas.";
+
+            // Usa el simulador (imprime en consola)
+            Notificador.enviarCorreo(nombre, correo, asunto, mensaje);
+            enviados++;
+        }
+        return enviados;
     }
 }

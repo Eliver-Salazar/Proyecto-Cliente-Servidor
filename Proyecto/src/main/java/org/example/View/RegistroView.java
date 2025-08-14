@@ -3,22 +3,21 @@ package org.example.View;
 import org.example.DAO.UsuarioDAO;
 import org.example.Modelo.Entidades.Usuario;
 import org.example.Modelo.Util.HashUtil;
+import org.example.Net.Remote.Remotes;
 
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Diálogo de registro de usuario:
- * - Hashea la contraseña y persiste.
- * - Permite elegir rol (Estudiante/Bibliotecario).
- */
+/** Registro local (va directo a DB). Opcional: podrías hacerlo remoto con una operación REGISTER. */
 class RegistroView extends JFrame {
     private JTextField txtNombre, txtCorreo;
     private JPasswordField txtPassword;
     private JComboBox<String> comboRol;
     private JButton btnRegistrar;
+    private final Remotes remotes;
 
-    public RegistroView() {
+    public RegistroView(Remotes remotes) {
+        this.remotes = remotes;
         setTitle("Registro de Usuario");
         setSize(400, 300);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -36,7 +35,6 @@ class RegistroView extends JFrame {
         btnRegistrar.addActionListener(e -> registrarUsuario());
     }
 
-    /** Valida campos, hashea password y registra. */
     private void registrarUsuario() {
         String nombre = txtNombre.getText();
         String correo = txtCorreo.getText();
@@ -44,7 +42,7 @@ class RegistroView extends JFrame {
         String contraseniaEncriptada = HashUtil.sha256(contraseniaSinEncriptar);
 
         Usuario usuario = new Usuario(0, nombre, correo, contraseniaEncriptada, (String) comboRol.getSelectedItem());
-        UsuarioDAO dao = new UsuarioDAO();
+        UsuarioDAO dao = new UsuarioDAO(); // usa DB local (misma máquina del server)
 
         if (dao.registrarUsuario(usuario)) {
             JOptionPane.showMessageDialog(this, "Usuario registrado exitosamente");

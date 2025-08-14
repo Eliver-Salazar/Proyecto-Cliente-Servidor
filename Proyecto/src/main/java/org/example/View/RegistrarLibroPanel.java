@@ -1,35 +1,34 @@
 package org.example.View;
 
-import org.example.DAO.AutorDAO;
-import org.example.DAO.CategoriaDAO;
-import org.example.DAO.LibroDAO;
 import org.example.Modelo.Entidades.Autor;
 import org.example.Modelo.Entidades.Categoria;
-import org.example.Modelo.Entidades.Libro;
+import org.example.Net.DTO.AutorDTO;
+import org.example.Net.DTO.CategoriaDTO;
+import org.example.Net.Remote.Remotes;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 public class RegistrarLibroPanel extends JPanel {
+
+    private final Remotes remotes;
 
     private JTextField txtTitulo, txtIsbn;
     private JComboBox<Autor> comboAutor;
     private JComboBox<Categoria> comboCategoria;
     private JCheckBox chkDisponible;
-    private JButton btnRegistrar;
 
-    public RegistrarLibroPanel() {
+    public RegistrarLibroPanel(Remotes remotes) {
+        this.remotes = remotes;
         setLayout(new GridLayout(6, 2, 8, 8));
 
         txtTitulo = new JTextField();
         txtIsbn = new JTextField();
-        comboAutor = new JComboBox<>();
-        comboCategoria = new JComboBox<>();
+        comboAutor = new JComboBox<org.example.Modelo.Entidades.Autor>();
+        comboCategoria = new JComboBox<org.example.Modelo.Entidades.Categoria>();
         chkDisponible = new JCheckBox("Disponible", true);
-        btnRegistrar = new JButton("Registrar Libro");
+        JButton btnRegistrar = new JButton("Registrar Libro");
 
-        // Cargar datos en los combos
         cargarAutores();
         cargarCategorias();
 
@@ -44,45 +43,46 @@ public class RegistrarLibroPanel extends JPanel {
     }
 
     private void cargarAutores() {
-        AutorDAO autorDAO = new AutorDAO();
-        java.util.List<Autor> autores = autorDAO.listarAutores();
-        comboAutor.removeAllItems();
-        for (Autor a : autores) {
-            comboAutor.addItem(a);
+        try {
+            comboAutor.removeAllItems();
+            comboAutor.addItem(new org.example.Modelo.Entidades.Autor(0,"Todos"));
+            for (var a : remotes.maestro.listarAutores()) {
+                comboAutor.addItem(new org.example.Modelo.Entidades.Autor(a.id, a.nombre));
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error cargando autores: " + ex.getMessage());
+        }
+    }
+    private void cargarCategorias() {
+        try {
+            comboCategoria.removeAllItems();
+            comboCategoria.addItem(new org.example.Modelo.Entidades.Categoria(0,"Todos"));
+            for (var c : remotes.maestro.listarCategorias()) {
+                comboCategoria.addItem(new org.example.Modelo.Entidades.Categoria(c.id, c.nombre));
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error cargando categorías: " + ex.getMessage());
         }
     }
 
-    private void cargarCategorias() {
-        CategoriaDAO categoriaDAO = new CategoriaDAO();
-        List<Categoria> categorias = categoriaDAO.listarCategorias();
-        comboCategoria.removeAllItems();
-        for (Categoria c : categorias) {
-            comboCategoria.addItem(c);
-        }
-    }
 
     private void registrarLibro() {
-        String titulo = txtTitulo.getText().trim();
-        String isbn = txtIsbn.getText().trim();
-        Autor autorSeleccionado = (Autor) comboAutor.getSelectedItem();
-        Categoria categoriaSeleccionada = (Categoria) comboCategoria.getSelectedItem();
-        boolean disponible = chkDisponible.isSelected();
+        try {
+            String titulo = txtTitulo.getText().trim();
+            String isbn = txtIsbn.getText().trim();
+            AutorDTO a = (AutorDTO) comboAutor.getSelectedItem();
+            CategoriaDTO c = (CategoriaDTO) comboCategoria.getSelectedItem();
+            boolean disponible = chkDisponible.isSelected();
 
-        if (titulo.isEmpty() || isbn.isEmpty() || autorSeleccionado == null || categoriaSeleccionada == null) {
-            JOptionPane.showMessageDialog(this, "Complete todos los campos", "Validación", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        Libro libro = new Libro(0, titulo, autorSeleccionado.getId(), categoriaSeleccionada.getId(), isbn, disponible);
-        LibroDAO libroDAO = new LibroDAO();
-
-        if (libroDAO.registrarLibro(libro)) {
+            if (titulo.isEmpty() || isbn.isEmpty() || a == null || c == null) {
+                JOptionPane.showMessageDialog(this, "Complete todos los campos", "Validación", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            remotes.maestro.registrarLibro(titulo, a.id, c.id, isbn, disponible);
             JOptionPane.showMessageDialog(this, "Libro registrado con éxito.");
-            txtTitulo.setText("");
-            txtIsbn.setText("");
-            chkDisponible.setSelected(true);
-        } else {
-            JOptionPane.showMessageDialog(this, "Error al registrar libro.", "Error", JOptionPane.ERROR_MESSAGE);
+            txtTitulo.setText(""); txtIsbn.setText(""); chkDisponible.setSelected(true);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al registrar: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

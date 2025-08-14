@@ -1,47 +1,38 @@
 package org.example.View;
 
-import org.example.DAO.CategoriaDAO;
-import org.example.Modelo.Entidades.Categoria;
+import org.example.Net.Remote.Remotes;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class RegistrarCategoriaPanel extends JPanel {
-
+    private final Remotes remotes;
     private JTextField txtNombre;
-    private JButton btnGuardar;
 
-    public RegistrarCategoriaPanel() {
+    public RegistrarCategoriaPanel(Remotes remotes) {
+        this.remotes = remotes;
         setLayout(new GridLayout(2, 2, 10, 10));
 
         add(new JLabel("Nombre de la Categoría:"));
-        txtNombre = new JTextField();
-        add(txtNombre);
+        txtNombre = new JTextField(); add(txtNombre);
+        JButton btnGuardar = new JButton("Guardar");
+        add(new JLabel()); add(btnGuardar);
 
-        btnGuardar = new JButton("Guardar");
-        add(new JLabel()); // Espacio vacío
-        add(btnGuardar);
+        btnGuardar.addActionListener(e -> guardar());
+    }
 
-        btnGuardar.addActionListener(e -> {
-            String nombre = txtNombre.getText();
-            if (nombre == null || nombre.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            CategoriaDAO dao = new CategoriaDAO();
-            if (dao.existeNombre(nombre)) {
-                JOptionPane.showMessageDialog(this, "La categoría ya existe", "Aviso", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            if (dao.registrarCategoria(new Categoria(0, nombre))) {
-                JOptionPane.showMessageDialog(this, "Categoría registrada correctamente");
-                txtNombre.setText("");
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo registrar (posible duplicado)", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
+    private void guardar() {
+        String nombre = txtNombre.getText().trim();
+        if (nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            remotes.maestro.registrarCategoria(nombre);
+            JOptionPane.showMessageDialog(this, "Categoría registrada correctamente");
+            txtNombre.setText("");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "No se pudo registrar: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
-

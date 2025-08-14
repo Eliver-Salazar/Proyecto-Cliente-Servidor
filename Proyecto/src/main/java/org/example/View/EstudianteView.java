@@ -1,42 +1,42 @@
 package org.example.View;
 
-import org.example.DAO.PrestamoDAO;
-import org.example.Modelo.Entidades.Usuario;
+import org.example.Net.Remote.PrestamoRemote;
+import org.example.Net.Remote.Remotes;
+import org.example.Net.Remote.Session;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class EstudianteView extends JFrame {
-    private final Usuario usuario;
+    private final Session session;
+    private final Remotes remotes;
 
-    public EstudianteView(Usuario usuario) {
-        this.usuario = usuario;
+    public EstudianteView(Session session, Remotes remotes) {
+        this.session = session; this.remotes = remotes;
+
         setTitle("Panel del Estudiante");
-        setSize(700, 480);
+        setSize(700, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // Top con bienvenida + cerrar sesión
         JPanel top = new JPanel(new BorderLayout());
-        top.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
-        top.add(new JLabel("Bienvenido(a), " + usuario.getNombre()), BorderLayout.WEST);
-
-        JButton btnCerrar = new JButton("Cerrar sesión"); // <-- NUEVO
-        btnCerrar.addActionListener(e -> {
-            dispose();
-            new LoginView().setVisible(true);
-        });
+        top.add(new JLabel("Bienvenido(a) " + session.getNombre()), BorderLayout.WEST);
+        JButton btnCerrar = new JButton("Cerrar sesión");
         top.add(btnCerrar, BorderLayout.EAST);
         add(top, BorderLayout.NORTH);
 
-        // Tabs
         JTabbedPane tabs = new JTabbedPane();
-        tabs.addTab("Buscar libros", new BuscarLibroPanel());
-        tabs.addTab("Reservar", new ReservaPanel(usuario.getId()));
+        tabs.addTab("Buscar libros", new BuscarLibroPanel(remotes));
+        tabs.addTab("Reservar", new ReservaPanel(session.getUsuarioId(), remotes));
         tabs.addTab("Historial", new HistorialPanel());
         add(tabs, BorderLayout.CENTER);
+
+        btnCerrar.addActionListener(e -> {
+            dispose();
+            new LoginView(remotes).setVisible(true);
+        });
     }
 
     class HistorialPanel extends JPanel {
@@ -49,24 +49,24 @@ public class EstudianteView extends JFrame {
             tabla = new JTable(modelo);
             add(new JScrollPane(tabla), BorderLayout.CENTER);
 
-            JPanel bottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             JButton btnCargar = new JButton("Cargar historial");
-            bottom.add(btnCargar);
-            add(bottom, BorderLayout.SOUTH);
-
+            add(btnCargar, BorderLayout.SOUTH);
             btnCargar.addActionListener(e -> cargar());
             cargar();
         }
 
         private void cargar() {
-            modelo.setRowCount(0);
-            var dao = new PrestamoDAO();
-            var lista = dao.historialPorUsuario(usuario.getId());
-            for (var p : lista) {
-                modelo.addRow(new Object[]{
-                        p.getId(), p.getLibroId(), p.getFechaInicio(),
-                        p.getFechaVencimiento(), p.getFechaDevolucion(), p.getMulta()
-                });
+            try {
+                modelo.setRowCount(0);
+                PrestamoRemote remote = remotes.prestamos;
+                var lista = remote.historialPorUsuario(session.getUsuarioId());
+                for (var p : lista) {
+                    modelo.addRow(new Object[]{
+                            p.id, p.libroId, p.fechaInicio, p.fechaVencimiento, p.fechaDevolucion, p.multa
+                    });
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
             }
         }
     }

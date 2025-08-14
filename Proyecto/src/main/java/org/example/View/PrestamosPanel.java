@@ -1,27 +1,25 @@
 package org.example.View;
 
-import org.example.DAO.PrestamoDAO;
-import org.example.Modelo.Entidades.Prestamo;
-import org.example.Modelo.Servicios.PrestamoService;
+import org.example.Net.Remote.Remotes;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.math.BigDecimal;
-import java.util.List;
 
 public class PrestamosPanel extends JPanel {
-    private final PrestamoDAO prestamoDAO = new PrestamoDAO();
-    private final PrestamoService service = new PrestamoService();
+    private final Remotes remotes;
 
     private JTextField txtUsuarioId, txtLibroId, txtDias;
     private JTable tblActivos;
     private DefaultTableModel modelo;
 
-    public PrestamosPanel() {
+    public PrestamosPanel(Remotes remotes) {
+        this.remotes = remotes;
+
         setLayout(new BorderLayout(8,8));
 
-        JPanel arriba = new JPanel(new GridLayout(2,7,6,6));
+        JPanel arriba = new JPanel(new GridLayout(2,6,6,6));
         arriba.add(new JLabel("Usuario ID:"));
         txtUsuarioId = new JTextField(); arriba.add(txtUsuarioId);
         arriba.add(new JLabel("Libro ID:"));
@@ -30,12 +28,8 @@ public class PrestamosPanel extends JPanel {
         txtDias = new JTextField("14"); arriba.add(txtDias);
 
         JButton btnPrestar = new JButton("Prestar");
-        JButton btnPrestarReserva = new JButton("Prestar (reserva)"); // nuevo
         JButton btnRefrescar = new JButton("Refrescar");
-        arriba.add(btnPrestar);
-        arriba.add(btnPrestarReserva);
-        arriba.add(btnRefrescar);
-
+        arriba.add(new JLabel()); arriba.add(btnPrestar); arriba.add(btnRefrescar);
         add(arriba, BorderLayout.NORTH);
 
         modelo = new DefaultTableModel(new Object[]{"ID Préstamo","Usuario","Libro","Inicio","Vence"}, 0);
@@ -47,8 +41,7 @@ public class PrestamosPanel extends JPanel {
         abajo.add(btnDevolver);
         add(abajo, BorderLayout.SOUTH);
 
-        btnPrestar.addActionListener(e -> prestar(false));
-        btnPrestarReserva.addActionListener(e -> prestar(true));
+        btnPrestar.addActionListener(e -> prestar());
         btnRefrescar.addActionListener(e -> cargarActivos());
         btnDevolver.addActionListener(e -> devolverSeleccionado());
 
@@ -56,28 +49,25 @@ public class PrestamosPanel extends JPanel {
     }
 
     private void cargarActivos() {
-        modelo.setRowCount(0);
-        List<Prestamo> activos = prestamoDAO.listarActivos();
-        for (Prestamo p : activos) {
-            modelo.addRow(new Object[]{
-                    p.getId(), p.getUsuarioId(), p.getLibroId(),
-                    p.getFechaInicio(), p.getFechaVencimiento()
-            });
+        try {
+            modelo.setRowCount(0);
+            var activos = remotes.prestamos.listarActivos();
+            for (var p : activos) {
+                modelo.addRow(new Object[]{p.id, p.usuarioId, p.libroId, p.fechaInicio, p.fechaVencimiento});
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
         }
     }
 
-    private void prestar(boolean desdeReserva) {
+    private void prestar() {
         try {
             int usuarioId = Integer.parseInt(txtUsuarioId.getText().trim());
             int libroId = Integer.parseInt(txtLibroId.getText().trim());
             int dias = Integer.parseInt(txtDias.getText().trim());
-
-            // Desde UI no cambia nada especial, el service ya respeta reserva NOTIFICADO.
-            int id = service.prestar(usuarioId, libroId, dias);
-
+            int id = remotes.prestamos.prestar(usuarioId, libroId, dias);
             JOptionPane.showMessageDialog(this, "Préstamo registrado. ID=" + id);
             cargarActivos();
-
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -91,7 +81,7 @@ public class PrestamosPanel extends JPanel {
         }
         int idPrestamo = (int) modelo.getValueAt(row, 0);
         try {
-            BigDecimal multa = service.devolver(idPrestamo);
+            BigDecimal multa = remotes.prestamos.devolver(idPrestamo);
             String msg = (multa == null || multa.signum()==0)
                     ? "Devolución registrada. Sin multa."
                     : "Devolución registrada. Multa: ₡" + multa;
@@ -101,9 +91,4 @@ public class PrestamosPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
 }
-
-
-
-

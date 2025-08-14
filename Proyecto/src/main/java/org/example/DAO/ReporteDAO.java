@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ReporteDAO {
 
-    public static class ItemConteo {
+    public static class ItemConteo implements java.io.Serializable {
         public final int idLibro;
         public final String titulo;
         public final int conteo;
@@ -17,6 +17,7 @@ public class ReporteDAO {
             this.idLibro = idLibro; this.titulo = titulo; this.conteo = conteo;
         }
     }
+
 
     public List<ItemConteo> topPrestados(int limite, LocalDate desde, LocalDate hasta) {
         List<ItemConteo> out = new ArrayList<>();

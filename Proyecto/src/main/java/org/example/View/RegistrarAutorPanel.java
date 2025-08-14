@@ -1,48 +1,38 @@
 package org.example.View;
 
-import org.example.DAO.AutorDAO;
-import org.example.Modelo.Entidades.Autor;
+import org.example.Net.Remote.Remotes;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class RegistrarAutorPanel extends JPanel {
-
+    private final Remotes remotes;
     private JTextField txtNombre;
-    private JButton btnGuardar;
 
-    public RegistrarAutorPanel() {
+    public RegistrarAutorPanel(Remotes remotes) {
+        this.remotes = remotes;
         setLayout(new GridLayout(2, 2, 10, 10));
 
         add(new JLabel("Nombre del Autor:"));
-        txtNombre = new JTextField();
-        add(txtNombre);
+        txtNombre = new JTextField(); add(txtNombre);
+        JButton btnGuardar = new JButton("Guardar");
+        add(new JLabel()); add(btnGuardar);
 
-        btnGuardar = new JButton("Guardar");
-        add(new JLabel()); // Espacio vacío
-        add(btnGuardar);
+        btnGuardar.addActionListener(e -> guardar());
+    }
 
-        btnGuardar.addActionListener(e -> {
-            String nombre = txtNombre.getText().trim();
-            if (nombre.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            AutorDAO dao = new AutorDAO();
-
-            if (dao.existeAutor(nombre)) {
-                JOptionPane.showMessageDialog(this, "El Autor ya existe", "Aviso", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            if (dao.registrarAutor(new Autor(0, nombre))) {
-                JOptionPane.showMessageDialog(this, "Autor registrado correctamente");
-                txtNombre.setText("");
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo registrar (posible duplicado)", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
+    private void guardar() {
+        String nombre = txtNombre.getText().trim();
+        if (nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            remotes.maestro.registrarAutor(nombre);
+            JOptionPane.showMessageDialog(this, "Autor registrado correctamente");
+            txtNombre.setText("");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "No se pudo registrar: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
-

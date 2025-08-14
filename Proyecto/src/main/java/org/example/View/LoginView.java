@@ -1,7 +1,8 @@
 package org.example.View;
 
-import org.example.Modelo.Entidades.Usuario;
-import org.example.Modelo.Servicios.AuthService;
+import org.example.Net.BibliotecaClient;
+import org.example.Net.Remote.Remotes;
+import org.example.Net.Remote.Session;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +17,10 @@ public class LoginView extends JFrame {
     private JTextField txtCorreo;
     private JPasswordField txtPassword;
 
-    public LoginView() {
+    private final Remotes remotes;
+
+    public LoginView(Remotes remotes) {
+        this.remotes = remotes;
         setTitle("Login - Biblioteca Digital");
         setSize(400, 220);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -39,30 +43,34 @@ public class LoginView extends JFrame {
         add(panel, BorderLayout.CENTER);
 
         btnLogin.addActionListener(e -> autenticar());
-        btnRegistro.addActionListener(e -> new RegistroView().setVisible(true));
+        btnRegistro.addActionListener(e -> new RegistroView(remotes).setVisible(true));
     }
 
-    /** Autentica y enruta a la vista correspondiente según rol. */
     private void autenticar() {
         String correo = txtCorreo.getText().trim();
         String pass = new String(txtPassword.getPassword());
-        AuthService auth = new AuthService();
-        Usuario u = auth.login(correo, pass);
-        if (u != null) {
-            JOptionPane.showMessageDialog(this, "Bienvenido " + u.getNombre());
-            if ("ESTUDIANTE".equalsIgnoreCase(u.getRol())) {
-                new EstudianteView(u).setVisible(true);
+        try {
+            Session s = remotes.auth.login(correo, pass);
+            JOptionPane.showMessageDialog(this, "Bienvenido " + s.getNombre());
+            if ("ESTUDIANTE".equalsIgnoreCase(s.getRol())) {
+                new EstudianteView(s, remotes).setVisible(true);
             } else {
-                new BibliotecarioView(u).setVisible(true);
+                new BibliotecarioView(s, remotes).setVisible(true);
             }
             dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, "Credenciales inválidas");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Credenciales inválidas: " + ex.getMessage());
         }
     }
 
-    /** Punto de entrada: abre el login. */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new LoginView().setVisible(true));
+        try {
+            // Cliente socket a localhost:5555
+            BibliotecaClient client = new BibliotecaClient("127.0.0.1", 5555);
+            Remotes remotes = new Remotes(client);
+            SwingUtilities.invokeLater(() -> new LoginView(remotes).setVisible(true));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

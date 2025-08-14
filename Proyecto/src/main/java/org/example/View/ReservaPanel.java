@@ -1,57 +1,48 @@
 package org.example.View;
 
-import org.example.DAO.LibroDAO;
-import org.example.DAO.PrestamoDAO;
-import org.example.DAO.ReservaDAO;
-import org.example.Modelo.Entidades.Libro;
-import org.example.Modelo.Entidades.Reserva;
-import org.example.Modelo.Servicios.ReservaService;
+import org.example.Net.Remote.Remotes;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.time.LocalDate;
-import java.util.List;
 
-/**
- * Panel para que el estudiante:
- * - Vea libros disponibles y los reserve de forma inmediata (se marcan no disponibles).
- * - Si el libro está prestado, pueda entrar en cola (reserva pendiente) para ser notificado al devolver.
- */
 public class ReservaPanel extends JPanel {
 
     private JTable tablaLibros;
     private final int usuarioId;
+    private final Remotes remotes;
 
-    public ReservaPanel(int usuarioId) {
+    public ReservaPanel(int usuarioId, Remotes remotes) {
         this.usuarioId = usuarioId;
+        this.remotes = remotes;
+
         setLayout(new BorderLayout(8, 8));
 
         tablaLibros = new JTable(new DefaultTableModel(new Object[]{"ID", "Título", "Disponible"}, 0));
-        JScrollPane scroll = new JScrollPane(tablaLibros);
-        add(scroll, BorderLayout.CENTER);
+        add(new JScrollPane(tablaLibros), BorderLayout.CENTER);
 
         JPanel panelBotones = new JPanel();
         JButton btnCargar = new JButton("Cargar libros disponibles");
-        JButton btnReservar = new JButton("Reservar / Apartar");
-        panelBotones.add(btnCargar);
-        panelBotones.add(btnReservar);
+        JButton btnReservar = new JButton("Reservar libro");
+        panelBotones.add(btnCargar); panelBotones.add(btnReservar);
         add(panelBotones, BorderLayout.SOUTH);
 
         btnCargar.addActionListener(e -> cargarLibrosDisponibles());
         btnReservar.addActionListener(e -> reservarLibro());
 
-        // Carga inicial
         cargarLibrosDisponibles();
     }
 
     private void cargarLibrosDisponibles() {
-        LibroDAO dao = new LibroDAO();
-        List<Libro> libros = dao.listarLibrosDisponibles();
-        DefaultTableModel modelo = (DefaultTableModel) tablaLibros.getModel();
-        modelo.setRowCount(0);
-        for (Libro l : libros) {
-            modelo.addRow(new Object[]{l.getId(), l.getTitulo(), l.isDisponible() ? "Sí" : "No"});
+        try {
+            var libros = remotes.libros.listarDisponibles();
+            DefaultTableModel modelo = (DefaultTableModel) tablaLibros.getModel();
+            modelo.setRowCount(0);
+            for (var l : libros) {
+                modelo.addRow(new Object[]{l.id, l.titulo, l.disponible ? "Sí" : "No"});
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
         }
     }
 
@@ -63,18 +54,15 @@ public class ReservaPanel extends JPanel {
         }
         int libroId = (int) tablaLibros.getValueAt(fila, 0);
         try {
-            // Reemplazar toda la lógica manual por el service:
-            var service = new org.example.Modelo.Servicios.ReservaService();
-            boolean inmediata = service.crearReserva(usuarioId, libroId);
+            boolean inmediata = remotes.reservas.reservar(usuarioId, libroId);
             if (inmediata) {
-                JOptionPane.showMessageDialog(this, "Reserva registrada y apartada. Revisa tu correo.");
+                JOptionPane.showMessageDialog(this, "Reserva inmediata: el libro quedó apartado para retiro.");
             } else {
-                JOptionPane.showMessageDialog(this, "Reserva en cola registrada. Te avisaremos cuando esté disponible.");
+                JOptionPane.showMessageDialog(this, "Agregado a la lista de espera. Recibirá notificación.");
             }
             cargarLibrosDisponibles();
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Ocurrió un error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al reservar: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
